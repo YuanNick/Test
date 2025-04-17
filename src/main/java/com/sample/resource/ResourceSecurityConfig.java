@@ -36,11 +36,9 @@ public class ResourceSecurityConfig {
     public SecurityFilterChain resourceSecurityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests((authorize) -> authorize
-//                                .anyRequest().authenticated()
-                                .anyRequest()
-                                .access(permissionManager)
+                        .anyRequest()
+                        .access(permissionManager)
                 )
-                // TODO 權限控管 by controller、api or url
                 .oauth2ResourceServer((oauth2) -> oauth2
                         .jwt(
                                 jwt -> {

@@ -67,7 +67,6 @@ public class CustomRegisteredClientRepository implements RegisteredClientReposit
         TokenSettings tokenSettings = TokenSettings.builder()
                 .accessTokenTimeToLive(Duration.ofHours(25))
                 .build();
-
         return RegisteredClient.withId(entity.getId())
                 .clientId(entity.getClientId())
                 .clientSecret(entity.getClientSecret())

@@ -30,15 +30,10 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.util.matcher.MediaTypeRequestMatcher;
 
-@Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
+@Configuration
 public class AuthorizationSecurityConfig {
-
-    // TODO error handler
-
-    private final ObjectMapper mapper;
-    private final RegisteredClientEntityRepository entityRepository;
 
     @Bean
     @Order(1)
@@ -46,7 +41,7 @@ public class AuthorizationSecurityConfig {
             throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
         http.getConfigurer(OAuth2AuthorizationServerConfigurer.class)
-                // TODO confirm it -> Enable OpenID Connect 1.0 還要開一端給非機器對機器的接口
+                // TODO 開一端給非機器對機器的接口 by Nick
                 .oidc(Customizer.withDefaults());
         http
                 .exceptionHandling((exceptions) -> exceptions
@@ -82,23 +77,6 @@ public class AuthorizationSecurityConfig {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
 
-    // TODO deprecated
-//    @Bean
-//    public OAuth2TokenCustomizer<JwtEncodingContext> jwtCustomizer() {
-//        return (context) -> {
-//            if (OAuth2TokenType.ACCESS_TOKEN.equals(context.getTokenType())) {
-//                Set<String> scopes;
-//                try {
-//                    scopes = loadScopes(context);
-//                } catch (JsonProcessingException e) {
-//                    throw new RuntimeException(e);
-//                }
-//
-//                context.getClaims().claim("scope", scopes);
-//            }
-//        };
-//    }
-
     private static KeyPair generateRsaKey() {
         KeyPair keyPair;
         try {
@@ -110,14 +88,5 @@ public class AuthorizationSecurityConfig {
         }
         return keyPair;
     }
-
-    // TODO deprecated
-//    private Set<String> loadScopes(JwtEncodingContext context) throws JsonProcessingException {
-//        String clientId = context.getRegisteredClient().getClientId();
-//        Optional<RegisteredClientEntity> optional = entityRepository.findByClientId(clientId);
-//
-//        return optional.isPresent() ? mapper.readValue(optional.get().getScopes(), HashSet.class) :
-//                new HashSet<>();
-//    }
 
 }
