@@ -1,6 +1,5 @@
 package com.sample.authorization;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sample.authorization.db.RegisteredClientEntity;
 import com.sample.authorization.db.RegisteredClientEntityRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,49 +20,27 @@ public class CustomRegisteredClientRepository implements RegisteredClientReposit
 
     @Override
     public void save(RegisteredClient registeredClient) {
-        RegisteredClientEntity entity;
-        try {
-            entity = convert(registeredClient);
-        } catch (JsonProcessingException e) {
-            // FIXME
-            throw new RuntimeException(e);
-        }
-
+        RegisteredClientEntity entity = convert(registeredClient);
         entity.setUpdatedTime(LocalDateTime.now());
+
         entityRepository.save(entity);
     }
 
     @Override
     public RegisteredClient findById(String id) {
         Optional<RegisteredClientEntity> optional = entityRepository.findById(id);
-        if (optional.isEmpty()) {
-            return null;
-        }
-
-        try {
-            return convert(optional.get());
-        } catch (JsonProcessingException e) {
-            // FIXME
-            throw new RuntimeException(e);
-        }
+        return optional.map(this::convert)
+                .orElse(null);
     }
 
     @Override
     public RegisteredClient findByClientId(String clientId) {
         Optional<RegisteredClientEntity> optional = entityRepository.findByClientId(clientId);
-        if (optional.isEmpty()) {
-            return null;
-        }
-
-        try {
-            return convert(optional.get());
-        } catch (JsonProcessingException e) {
-            // FIXME
-            throw new RuntimeException(e);
-        }
+        return optional.map(this::convert)
+                .orElse(null);
     }
 
-    private RegisteredClient convert(RegisteredClientEntity entity) throws JsonProcessingException {
+    private RegisteredClient convert(RegisteredClientEntity entity) {
         TokenSettings tokenSettings = TokenSettings.builder()
                 .accessTokenTimeToLive(Duration.ofHours(25))
                 .build();
@@ -77,7 +54,7 @@ public class CustomRegisteredClientRepository implements RegisteredClientReposit
                 .build();
     }
 
-    private RegisteredClientEntity convert(RegisteredClient registeredClient) throws JsonProcessingException {
+    private RegisteredClientEntity convert(RegisteredClient registeredClient) {
         RegisteredClientEntity entity = new RegisteredClientEntity();
         entity.setId(registeredClient.getId());
         entity.setClientId(registeredClient.getClientId());

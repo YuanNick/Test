@@ -30,8 +30,7 @@ public class PermissionManager implements AuthorizationManager<RequestAuthorizat
         try {
             authorized = checkUrl(authentication, context);
         } catch (Exception e) {
-            // FIXME by Nick
-            log.error("Authentication error", e);
+            // TODO log
             authorized = false;
         }
 

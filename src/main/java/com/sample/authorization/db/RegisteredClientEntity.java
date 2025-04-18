@@ -6,6 +6,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
+// TODO create table
 @Data
 @Table(name = "registered_client")
 @Entity
