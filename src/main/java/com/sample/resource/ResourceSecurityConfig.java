@@ -14,7 +14,8 @@ import org.springframework.security.web.SecurityFilterChain;
 public class ResourceSecurityConfig {
 
     private final PermissionManager permissionManager;
-    private final CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
+    private final ResourceCustomAccessDeniedHandler customAccessDeniedHandler;
+    private final ResourceCustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
     @Bean
     @Order(2)
@@ -31,6 +32,7 @@ public class ResourceSecurityConfig {
                                 }
                         )
                         .authenticationEntryPoint(customAuthenticationEntryPoint)
+                        .accessDeniedHandler(customAccessDeniedHandler)
                 );
 
         return http.build();

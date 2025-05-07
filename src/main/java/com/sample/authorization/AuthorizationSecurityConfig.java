@@ -22,6 +22,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
+import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
 import org.springframework.security.web.SecurityFilterChain;
 
 @EnableWebSecurity
@@ -29,12 +30,20 @@ import org.springframework.security.web.SecurityFilterChain;
 @Configuration
 public class AuthorizationSecurityConfig {
 
-    // TODO 開一端給非機器對機器的接口 by Nick
+    private final AuthorizationCustomErrorHandler customErrorHandler;
 
     @Bean
     @Order(1)
     public SecurityFilterChain authorizationSecurityFilterChain(HttpSecurity http) throws Exception {
         OAuth2AuthorizationServerConfiguration.applyDefaultSecurity(http);
+
+        http
+                .getConfigurer(OAuth2AuthorizationServerConfigurer.class)
+                .clientAuthentication(clientAuth ->
+                        clientAuth
+                                .errorResponseHandler(customErrorHandler::handle)
+                );
+
         return http.build();
     }
 

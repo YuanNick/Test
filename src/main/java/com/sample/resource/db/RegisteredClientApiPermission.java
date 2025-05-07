@@ -10,7 +10,6 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-// TODO create table
 @Data
 @Entity
 @Table(name = "registered_client_api_permission")
